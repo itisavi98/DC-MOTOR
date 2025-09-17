@@ -181,7 +181,7 @@
           };
           const row = document.createElement('div');
           row.className = 'result-row';
-          row.innerHTML = <div class="font-medium">${labelMap[k]||k}</div><div class="font-mono text-[#0b5cff]">${fmt(map[k])}${k==='P'||k==='Z'||k==='A'?'':''}</div>;
+          row.innerHTML = `<div class="font-medium">${labelMap[k]||k}</div><div class="font-mono text-[#0b5cff]">${fmt(map[k])}${k==='P'||k==='Z'||k==='A'?'':''}</div>`;
           container.appendChild(row);
         }
       });
@@ -197,7 +197,7 @@
 
       // defaults for A if not given: lap winding -> A = P; wave -> A = 2. We'll use A = P when provided, else 2
       if (!data.A) data.A = data.P || 2;
-      pushStep(steps, Using A = ${data.A});
+      pushStep(steps, `Using A = ${data.A}`);
 
       // compute If from V and Rf (shunt resistance)
       let iter=0, changed=true;
@@ -205,22 +205,22 @@
         changed = false;
         iter++;
 
-        if (data.V!=null && data.Rf!=null && data.If==null) { data.If = data.V / data.Rf; pushStep(steps, If = V / R_sh = ${fmt(data.V)} / ${fmt(data.Rf)} = ${fmt(data.If)}); changed=true; }
-        if (data.IL!=null && data.If!=null && data.Ia==null) { data.Ia = data.IL - data.If; pushStep(steps, I_a = I_L - I_f = ${fmt(data.IL)} - ${fmt(data.If)} = ${fmt(data.Ia)}); changed=true; }
-        if (data.Ia!=null && data.If!=null && data.IL==null) { data.IL = data.Ia + data.If; pushStep(steps, I_L = I_a + I_f = ${fmt(data.Ia)} + ${fmt(data.If)} = ${fmt(data.IL)}); changed=true; }
-        if (data.V!=null && data.Ra!=null && data.Ia!=null && data.Eb==null) { data.Eb = data.V - data.Ia * data.Ra; pushStep(steps, E_b = V - I_a*R_a = ${fmt(data.V)} - ${fmt(data.Ia)}*${fmt(data.Ra)} = ${fmt(data.Eb)}); changed=true; }
-        if (data.Eb!=null && data.Ia!=null && data.Ra==null && data.V!=null) { if (data.Ia!==0) { data.Ra = (data.V - data.Eb) / data.Ia; pushStep(steps, R_a = (V - E_b)/I_a = (${fmt(data.V)} - ${fmt(data.Eb)}) / ${fmt(data.Ia)} = ${fmt(data.Ra)}); changed=true; } }
+        if (data.V!=null && data.Rf!=null && data.If==null) { data.If = data.V / data.Rf; pushStep(steps, `If = V / R_sh = ${fmt(data.V)} / ${fmt(data.Rf)} = ${fmt(data.If)}`); changed=true; }
+        if (data.IL!=null && data.If!=null && data.Ia==null) { data.Ia = data.IL - data.If; pushStep(steps, `I_a = I_L - I_f = ${fmt(data.IL)} - ${fmt(data.If)} = ${fmt(data.Ia)}`); changed=true; }
+        if (data.Ia!=null && data.If!=null && data.IL==null) { data.IL = data.Ia + data.If; pushStep(steps, `I_L = I_a + I_f = ${fmt(data.Ia)} + ${fmt(data.If)} = ${fmt(data.IL)}`); changed=true; }
+        if (data.V!=null && data.Ra!=null && data.Ia!=null && data.Eb==null) { data.Eb = data.V - data.Ia * data.Ra; pushStep(steps, `E_b = V - I_a*R_a = ${fmt(data.V)} - ${fmt(data.Ia)}*${fmt(data.Ra)} = ${fmt(data.Eb)}`); changed=true; }
+        if (data.Eb!=null && data.Ia!=null && data.Ra==null && data.V!=null) { if (data.Ia!==0) { data.Ra = (data.V - data.Eb) / data.Ia; pushStep(steps, `R_a = (V - E_b)/I_a = (${fmt(data.V)} - ${fmt(data.Eb)}) / ${fmt(data.Ia)} = ${fmt(data.Ra)}`); changed=true; } }
 
         // Electromechanical constants if P and Z known
         if (data.P!=null && data.Z!=null && data.A!=null) {
           const kE = (data.P * data.Z) / (60 * data.A);
           const kT = (data.P * data.Z) / (2 * Math.PI * data.A);
           // Eb = kE * phi * N
-          if (data.Eb!=null && data.N!=null && data.phi==null && kE!==0) { data.phi = data.Eb / (kE * data.N); pushStep(steps, phi = E_b / (k_E * N) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.N)}) = ${fmt(data.phi)}); changed=true; }
-          if (data.phi!=null && data.N!=null && data.Eb==null) { data.Eb = kE * data.phi * data.N; pushStep(steps, E_b = k_E * phi * N = ${fmt(kE)} * ${fmt(data.phi)} * ${fmt(data.N)} = ${fmt(data.Eb)}); changed=true; }
-          if (data.T!=null && data.Ia!=null && data.phi==null && kT!==0) { data.phi = data.T / (kT * data.Ia); pushStep(steps, phi = T / (k_T * I_a) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}) = ${fmt(data.phi)}); changed=true; }
-          if (data.phi!=null && data.Ia!=null && data.T==null) { data.T = kT * data.phi * data.Ia; pushStep(steps, T = k_T * phi * I_a = ${fmt(kT)} * ${fmt(data.phi)} * ${fmt(data.Ia)} = ${fmt(data.T)}); changed=true; }
-          if (data.Eb!=null && data.phi!=null && data.N==null && kE!==0) { data.N = data.Eb / (kE * data.phi); pushStep(steps, N = E_b / (k_E * phi) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.phi)}) = ${fmt(data.N)}); changed=true; }
+          if (data.Eb!=null && data.N!=null && data.phi==null && kE!==0) { data.phi = data.Eb / (kE * data.N); pushStep(steps, `phi = E_b / (k_E * N) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.N)}) = ${fmt(data.phi)}`); changed=true; }
+          if (data.phi!=null && data.N!=null && data.Eb==null) { data.Eb = kE * data.phi * data.N; pushStep(steps, `E_b = k_E * phi * N = ${fmt(kE)} * ${fmt(data.phi)} * ${fmt(data.N)} = ${fmt(data.Eb)}`); changed=true; }
+          if (data.T!=null && data.Ia!=null && data.phi==null && kT!==0) { data.phi = data.T / (kT * data.Ia); pushStep(steps, `phi = T / (k_T * I_a) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}) = ${fmt(data.phi)}`); changed=true; }
+          if (data.phi!=null && data.Ia!=null && data.T==null) { data.T = kT * data.phi * data.Ia; pushStep(steps, `T = k_T * phi * I_a = ${fmt(kT)} * ${fmt(data.phi)} * ${fmt(data.Ia)} = ${fmt(data.T)}`); changed=true; }
+          if (data.Eb!=null && data.phi!=null && data.N==null && kE!==0) { data.N = data.Eb / (kE * data.phi); pushStep(steps, `N = E_b / (k_E * phi) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.phi)}) = ${fmt(data.N)}`); changed=true; }
         }
 
         // If Eb known but not phi or N and only one of them known, try others (already covered)
@@ -236,13 +236,13 @@
       const data = Object.assign({}, input);
       pushStep(steps, 'Solving as DC SERIES motor...');
       // Series: Ia = IL = If
-      if (data.IL!=null && data.Ia==null) { data.Ia = data.IL; pushStep(steps, I_a = I_L = ${fmt(data.IL)}); }
-      if (data.Ia!=null && data.IL==null) { data.IL = data.Ia; pushStep(steps, I_L = I_a = ${fmt(data.Ia)}); }
+      if (data.IL!=null && data.Ia==null) { data.Ia = data.IL; pushStep(steps, `I_a = I_L = ${fmt(data.IL)}`); }
+      if (data.Ia!=null && data.IL==null) { data.IL = data.Ia; pushStep(steps, `I_L = I_a = ${fmt(data.Ia)}`); }
 
       let iter=0, changed=true;
       // default A
       if (!data.A) data.A = data.P || 2;
-      pushStep(steps, Using A = ${data.A});
+      pushStep(steps, `Using A = ${data.A}`);
 
       while (changed && iter<30) {
         changed = false; iter++;
@@ -255,20 +255,20 @@
         // Voltage equation -> Eb
         if (data.V!=null && data.IL!=null && data.Rtot!=null && data.Eb==null) {
           data.Eb = data.V - data.IL * data.Rtot;
-          pushStep(steps, E_b = V - I*(R_a+R_se) = ${fmt(data.V)} - ${fmt(data.IL)}*${fmt(data.Rtot)} = ${fmt(data.Eb)});
+          pushStep(steps, `E_b = V - I*(R_a+R_se) = ${fmt(data.V)} - ${fmt(data.IL)}*${fmt(data.Rtot)} = ${fmt(data.Eb)}`);
           changed=true;
         }
 
         // If Eb given but Rtot unknown we can find Rtot
         if (data.Eb!=null && data.IL!=null && data.Rtot==null && data.IL!==0 && data.V!=null) {
           data.Rtot = (data.V - data.Eb) / data.IL;
-          pushStep(steps, R_tot = (V - E_b)/I = (${fmt(data.V)} - ${fmt(data.Eb)}) / ${fmt(data.IL)} = ${fmt(data.Rtot)});
+          pushStep(steps, `R_tot = (V - E_b)/I = (${fmt(data.V)} - ${fmt(data.Eb)}) / ${fmt(data.IL)} = ${fmt(data.Rtot)}`);
           changed=true;
         }
 
         if (data.Rtot!=null) {
-          if (data.Ra==null && data.Rf!=null) { data.Ra = data.Rtot - data.Rf; pushStep(steps, R_a = R_tot - R_se = ${fmt(data.Rtot)} - ${fmt(data.Rf)} = ${fmt(data.Ra)}); changed=true; }
-          if (data.Rf==null && data.Ra!=null) { data.Rf = data.Rtot - data.Ra; pushStep(steps, R_se = R_tot - R_a = ${fmt(data.Rtot)} - ${fmt(data.Ra)} = ${fmt(data.Rf)}); changed=true; }
+          if (data.Ra==null && data.Rf!=null) { data.Ra = data.Rtot - data.Rf; pushStep(steps, `R_a = R_tot - R_se = ${fmt(data.Rtot)} - ${fmt(data.Rf)} = ${fmt(data.Ra)}`); changed=true; }
+          if (data.Rf==null && data.Ra!=null) { data.Rf = data.Rtot - data.Ra; pushStep(steps, `R_se = R_tot - R_a = ${fmt(data.Rtot)} - ${fmt(data.Ra)} = ${fmt(data.Rf)}`); changed=true; }
         }
 
         // Electromechanical constants if P and Z known
@@ -279,49 +279,49 @@
           // If phi known and Ia known, torque (use direct torque formula)
           if (data.phi!=null && data.Ia!=null && data.T==null) {
             data.T = kT * data.phi * data.Ia;
-            pushStep(steps, T = k_T * phi * I_a = ${fmt(kT)} * ${fmt(data.phi)} * ${fmt(data.Ia)} = ${fmt(data.T)});
+            pushStep(steps, `T = k_T * phi * I_a = ${fmt(kT)} * ${fmt(data.phi)} * ${fmt(data.Ia)} = ${fmt(data.T)}`);
             changed=true;
           }
 
           // If T and Ia known, get phi
           if (data.T!=null && data.Ia!=null && data.phi==null && kT!==0) {
             data.phi = data.T / (kT * data.Ia);
-            pushStep(steps, phi = T / (k_T * I_a) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}) = ${fmt(data.phi)});
+            pushStep(steps, `phi = T / (k_T * I_a) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}) = ${fmt(data.phi)}`);
             changed=true;
           }
 
           // If Eb and phi known -> speed
           if (data.Eb!=null && data.phi!=null && data.N==null && kE!==0) {
             data.N = data.Eb / (kE * data.phi);
-            pushStep(steps, N = E_b / (k_E * phi) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.phi)}) = ${fmt(data.N)} (rpm));
+            pushStep(steps, `N = E_b / (k_E * phi) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.phi)}) = ${fmt(data.N)} (rpm)`);
             changed=true;
           }
 
           // If Eb, N and Ia known but phi unknown and phi depends on I, we can compute k_phi
           if (data.Eb!=null && data.N!=null && data.Ia!=null && !data.k_phi && kE * data.N * data.Ia !== 0) {
             data.k_phi = data.Eb / (kE * data.Ia * data.N);
-            pushStep(steps, k_phi = Eb / (k_E * I_a * N) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.Ia)} * ${fmt(data.N)}) = ${fmt(data.k_phi)});
+            pushStep(steps, `k_phi = Eb / (k_E * I_a * N) = ${fmt(data.Eb)} / (${fmt(kE)} * ${fmt(data.Ia)} * ${fmt(data.N)}) = ${fmt(data.k_phi)}`);
             changed=true;
           }
 
           // If T known & Ia known, k_phi from T = kT * k_phi * Ia^2
           if (data.T!=null && data.Ia!=null && !data.k_phi && kT !== 0) {
             data.k_phi = data.T / (kT * data.Ia * data.Ia);
-            pushStep(steps, k_phi = T / (k_T * I_a^2) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}^2) = ${fmt(data.k_phi)});
+            pushStep(steps, `k_phi = T / (k_T * I_a^2) = ${fmt(data.T)} / (${fmt(kT)} * ${fmt(data.Ia)}^2) = ${fmt(data.k_phi)}`);
             changed=true;
           }
 
           // With k_phi we can relate Eb and N: Eb = kE * k_phi * Ia * N
           if (data.k_phi!=null && data.Ia!=null && data.N!=null && data.Eb==null) {
             data.Eb = kE * data.k_phi * data.Ia * data.N;
-            pushStep(steps, E_b = k_E * k_phi * I_a * N = ${fmt(kE)} * ${fmt(data.k_phi)} * ${fmt(data.Ia)} * ${fmt(data.N)} = ${fmt(data.Eb)});
+            pushStep(steps, `E_b = k_E * k_phi * I_a * N = ${fmt(kE)} * ${fmt(data.k_phi)} * ${fmt(data.Ia)} * ${fmt(data.N)} = ${fmt(data.Eb)}`);
             changed=true;
           }
 
           // With k_phi we can compute torque too
           if (data.k_phi!=null && data.Ia!=null && data.T==null) {
             data.T = kT * data.k_phi * data.Ia * data.Ia;
-            pushStep(steps, T = k_T * k_phi * I_a^2 = ${fmt(kT)} * ${fmt(data.k_phi)} * ${fmt(data.Ia)}^2 = ${fmt(data.T)});
+            pushStep(steps, `T = k_T * k_phi * I_a^2 = ${fmt(kT)} * ${fmt(data.k_phi)} * ${fmt(data.Ia)}^2 = ${fmt(data.T)}`);
             changed=true;
           }
 
@@ -331,7 +331,7 @@
             if (omega !== 0) {
               const Pdev = data.Eb * data.Ia;
               data.T = Pdev / omega;
-              pushStep(steps, Alternative torque via P_dev = E_b * I_a = ${fmt(data.Eb)} * ${fmt(data.Ia)} = ${fmt(Pdev)} W; T = P_dev / ω = ${fmt(Pdev)} / ${fmt(omega)} = ${fmt(data.T)} N·m);
+              pushStep(steps, `Alternative torque via P_dev = E_b * I_a = ${fmt(data.Eb)} * ${fmt(data.Ia)} = ${fmt(Pdev)} W; T = P_dev / ω = ${fmt(Pdev)} / ${fmt(omega)} = ${fmt(data.T)} N·m`);
               changed=true;
             }
           }
@@ -340,7 +340,7 @@
         // If current and flux relation sometimes phi unknown
         if (data.phi==null && data.k_phi!=null && data.Ia!=null) {
           data.phi = data.k_phi * data.Ia;
-          pushStep(steps, phi = k_phi * I_a = ${fmt(data.k_phi)} * ${fmt(data.Ia)} = ${fmt(data.phi)});
+          pushStep(steps, `phi = k_phi * I_a = ${fmt(data.k_phi)} * ${fmt(data.Ia)} = ${fmt(data.phi)}`);
           changed=true;
         }
 
